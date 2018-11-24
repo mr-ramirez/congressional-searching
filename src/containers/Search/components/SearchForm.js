@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-import { Chambers } from '../../data/static/chambers';
+import {
+  startLoadingAllMembers,
+} from '../actions';
+
+import { Chambers } from '../../../data/static/chambers';
 import SuggestionBox from './SuggestionBox';
 
-export default class SearchForm extends Component {
+class SearchForm extends Component {
   constructor(props) {
     super(props);
 
@@ -15,6 +20,8 @@ export default class SearchForm extends Component {
   }
 
   textChanged = (event) => {
+    this.props.startLoadingAllMembers();
+
     const {
       target: {
         value,
@@ -75,3 +82,17 @@ export default class SearchForm extends Component {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    ...state,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    startLoadingAllMembers: () => dispatch(startLoadingAllMembers()),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchForm);

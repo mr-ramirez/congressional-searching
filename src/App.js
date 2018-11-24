@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import fetch, { Headers } from 'node-fetch';
 import logo from './logo.png';
 import './App.css';
-import SearchForm from './components/Search/SearchForm';
+import SearchForm from './containers/Search/components/SearchForm';
 import Member from './models/member';
 
 class App extends Component {
