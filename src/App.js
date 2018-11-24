@@ -1,27 +1,36 @@
+import 'isomorphic-fetch';
 import React, { Component } from 'react';
+import fetch, { Headers } from 'node-fetch';
 import logo from './logo.png';
 import './App.css';
-
-// you should feel free to reorganize the code however you see fit
-// including creating additional folders/files and organizing your
-// components however you would like.
+import SearchForm from './components/Search/SearchForm';
+import Member from './models/member';
 
 class App extends Component {
-  componentWillMount() {
-    const session = 115 // 115th congressional session
-    const chamber = 'senate' // or 'house'
+  constructor() {
+    super();
 
-    // sample API call
+    this.state = {
+      members: [],
+    };
+  }
+
+  UNSAFE_componentWillMount() {
+    const session = 115; // 115th congressional session
+    const chamber = 'senate'; // or 'house'
+
     fetch(`https://api.propublica.org/congress/v1/${session}/${chamber}/members.json`, {
       headers: new Headers({
         'X-API-Key': 'd0ywBucVrXRlMQhENZxRtL3O7NPgtou2mwnLARTr',
       }),
     })
-    .then((res) => res.json())
-    .then((json) => json.results[0].members)
-    .then((members) => {
-      // array of congressperson JSON objects
-    })
+      .then((res) => res.json())
+      .then((json) => json.results[0].members)
+      .then((members) => {
+        this.setState({
+          members: members.map(member => new Member(member)),
+        });
+      });
   }
 
   render() {
@@ -35,6 +44,7 @@ class App extends Component {
           {/*
             Your app should render this part of the page.
           */}
+          <SearchForm results={this.state.members} />
         </section>
       </div>
     );
