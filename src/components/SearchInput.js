@@ -19,7 +19,9 @@ class SearchInput extends Component {
           className="form-control"
           aria-describedby="input"
           placeholder={this.props.placeholder}
-          onChange={this.textChanged} />
+          onChange={this.textChanged}
+          onFocus={this.props.onFocus}
+          onBlur={this.props.onBlur} />
 
         <div className="input-group-append">
           <button
@@ -35,10 +37,11 @@ class SearchInput extends Component {
 }
 
 SearchInput.propTypes = {
+  onBlur: PropTypes.func,
   onChange: PropTypes.func,
-  type: PropTypes.string,
+  onFocus: PropTypes.func,
   placeholder: PropTypes.string,
-  
+  type: PropTypes.string,
 };
 
 export default SearchInput;

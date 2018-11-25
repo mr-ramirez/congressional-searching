@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import {
+  hideSuggestionBox,
   setSuggestions,
+  showSuggestionBox,
 } from '../actions';
 
-import Chambers from '../../../data/static/chambers';
 import SuggestionBox from './SuggestionBox';
 import SearchInput from '../../../components/SearchInput';
 
@@ -14,9 +15,8 @@ class SearchForm extends Component {
     super(props);
 
     this.state = {
-      chamber: Chambers.HOUSE.name,
       searchText: null,
-      suggestions: [],
+      shouldSuggestionBoxBeDisplayed: true,
     };
   }
 
@@ -32,19 +32,32 @@ class SearchForm extends Component {
       || middleName.toLowerCase().includes(searchText);
   }
 
+  makeSuggestionBoxInvisible = () => {
+    setTimeout(() => {
+      this.props.hideSuggestionBox();
+    }, 200);
+  }
+
+  sortMembers = ({ a, b }) => {
+    const firstMember = `${a.firstName} ${a.middleName} ${a.lastName}`;
+    const secondMember = `${b.firstName} ${b.middleName} ${b.lastName}`;
+
+    return ('' + firstMember).localeCompare(secondMember);
+  }
+
   textChanged = ({ value }) => {
     const searchText = value.trim() === '' ? null : value.toLowerCase();
-    const { members } = this.props.app;
-    const { setSuggestions } = this.props;
+
+    const {
+      app: {
+        members,
+      },
+      setSuggestions,
+    } = this.props;
 
     const newSuggestions = members
       .filter((member) => this.doesMemberInformationMatchSearchText({ searchText, member }))
-      .sort((a, b) => {
-        const firstMember = `${a.firstName} ${a.middleName} ${a.lastName}`;
-        const secondMember = `${b.firstName} ${b.middleName} ${b.lastName}`;
-
-        return ('' + firstMember).localeCompare(secondMember);
-      })
+      .sort((a, b) => this.sortMembers({ a, b }))
       .slice(0, 7);
 
     this.setState({ searchText });
@@ -60,6 +73,8 @@ class SearchForm extends Component {
               <SearchInput
                 type="text"
                 onChange={this.textChanged}
+                onFocus={this.props.showSuggestionBox}
+                onBlur={this.makeSuggestionBoxInvisible}
                 placeholder={`Search a member of the ${this.props.search.chamber}`} />
             </form>
           </div>
@@ -68,7 +83,7 @@ class SearchForm extends Component {
         <div className="row">
           <div className="col-lg-12">
             {
-              !this.state.searchText ?
+              !this.state.searchText || !this.props.search.shouldSuggestionBoxBeDisplayed ?
                 null : (<SuggestionBox suggestions={this.props.search.suggestions} />)
             }
           </div>
@@ -92,8 +107,12 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    hideSuggestionBox: () =>
+      dispatch(hideSuggestionBox()),
     setSuggestions: ({ suggestions }) =>
       dispatch(setSuggestions({ suggestions })),
+    showSuggestionBox: () =>
+      dispatch(showSuggestionBox()),
   };
 }
 
