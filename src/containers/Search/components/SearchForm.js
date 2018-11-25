@@ -6,6 +6,7 @@ import {
   goToNextPage,
   goToPreviousPage,
   hideSuggestionBox,
+  setFilters,
   setSearchResults,
   setSuggestions,
   showSuggestionBox,
@@ -30,6 +31,22 @@ class SearchForm extends Component {
       shouldSuggestionBoxBeDisplayed: true,
     };
   }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    const {
+      gender,
+      party,
+      searchResults,
+      usState,
+    } = this.props.search;
+
+    if ((gender !== nextProps.search.gender
+      || party !== nextProps.search.party
+      || usState !== nextProps.search.usState)
+      && searchResults.length > 0) {
+      this.processFixing(nextProps);
+    }
+  }
   
   makeSuggestionBoxInvisible = () => {
     setTimeout(() => {
@@ -39,13 +56,32 @@ class SearchForm extends Component {
 
   startFixingResultsList = () => {
     this.props.hideSuggestionBox();
+    this.processFixing(this.props);
+  }
+
+  processFixing = (props) => {
+    const {
+      app: {
+        members,
+      },
+      search: {
+        gender,
+        pageSize,
+        party,
+        usState,
+      },
+    } = props;
 
     this.props.fixResultsList({
-      members: this.props.app.members,
-      pageSize: this.props.search.pageSize,
+      gender,
+      members,
+      pageSize,
+      party,
       searchText: this.state.searchText,
+      state: usState,
     });
   }
+  
 
   textChanged = ({ value }) => {
     const searchText = value.trim() === '' ? null : value.toLowerCase();
@@ -54,11 +90,22 @@ class SearchForm extends Component {
       app: {
         members,
       },
+      search: {
+        gender,
+        party,
+        usState,
+      },
       setSuggestions,
     } = this.props;
 
     const newSuggestions = members
-      .filter((member) => doesMemberInformationMatchSearchText({ searchText, member }))
+      .filter((member) => doesMemberInformationMatchSearchText({
+        gender,
+        member,
+        party,
+        searchText,
+        state: usState,
+      }))
       .sort((a, b) => sortMembers({ a, b }))
       .slice(0, 7);
 
@@ -84,7 +131,11 @@ class SearchForm extends Component {
 
         <div className="row mt-1">
           <div className="col-lg-12">
-            <SearchFilters />
+            <SearchFilters
+              gender={this.props.search.gender}
+              party={this.props.search.party}
+              usState={this.props.search.usState}
+              setFilters={this.props.setFilters} />
           </div>
         </div>
 
@@ -120,8 +171,22 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fixResultsList: ({ members, pageSize, searchText }) =>
-      dispatch(fixResultsList({ members, pageSize, searchText })),
+    fixResultsList: ({
+      gender,
+      members,
+      pageSize,
+      party,
+      searchText,
+      state,
+    }) =>
+      dispatch(fixResultsList({
+        gender,
+        members,
+        pageSize,
+        party,
+        searchText,
+        state,
+      })),
 
     goToNextPage: () =>
       dispatch(goToNextPage()),
@@ -131,6 +196,9 @@ function mapDispatchToProps(dispatch) {
 
     hideSuggestionBox: () =>
       dispatch(hideSuggestionBox()),
+    
+    setFilters: ({ gender, party, usState }) =>
+      dispatch(setFilters({ gender, party, usState })),
 
     setSearchResults: ({ searchResults, totalPages }) =>
       dispatch(setSearchResults({ searchResults, totalPages })),

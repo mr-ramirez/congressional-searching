@@ -36,7 +36,7 @@ class SearchResults extends Component {
 
         {
           results.length > 0 ?
-            <div className="row mt-3">
+            <div className="row my-3">
               <div className="col-lg-4 text-center">
               </div>
 

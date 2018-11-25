@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import '../styles/SearchFilters.css';
 import Genders from '../../../data/static/genders';
@@ -14,9 +15,63 @@ class SearchFilters extends Component {
     };
   }
 
+  handleGenderChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+
+    const {
+      party,
+      setFilters,
+      usState,
+    } = this.props;
+
+    setFilters({
+      gender: value,
+      party,
+      usState,
+    });
+  }
+
+  handlePartyChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+
+    const {
+      gender,
+      setFilters,
+      usState,
+    } = this.props;
+
+    setFilters({
+      gender,
+      party: value,
+      usState,
+    });
+  }
+
+  handleStateChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+
+    const {
+      party,
+      setFilters,
+      gender,
+    } = this.props;
+
+    setFilters({
+      gender,
+      party,
+      usState: value,
+    });
+  }
+
   getFiltersForm = () => {
     return (
-      <div className="row">
+      <div className="row border border-secondary mx-1">
         <div className="col-lg-12 text-right">
 
           <div className="row">
@@ -26,9 +81,11 @@ class SearchFilters extends Component {
                 <label className="filterText"
                   htmlFor="stateFilter">State</label>
 
-                <select className="form-control filterText" id="stateFilter">
+                <select className="form-control filterText"
+                  id="stateFilter"
+                  onChange={this.handleStateChange} >
                   <option
-                    value={ 'ALL' }
+                    value={ 'DEFAULT' }
                     key={'stateOption_default'} >
                     All states
                   </option>
@@ -53,9 +110,11 @@ class SearchFilters extends Component {
                 <label className="filterText"
                   htmlFor="partyFilter">Party</label>
 
-                <select className="form-control filterText" id="partyFilter">
+                <select className="form-control filterText"
+                  id="partyFilter"
+                  onChange={this.handlePartyChange} >
                   <option
-                    value={ 'ALL' }
+                    value={ 'DEFAULT' }
                     key={'partyOption_default'} >
                     All parties
                   </option>
@@ -79,9 +138,11 @@ class SearchFilters extends Component {
                 <label className="filterText"
                   htmlFor="genderFilter">Gender</label>
 
-                <select className="form-control filterText" id="genderFilter">
+                <select className="form-control filterText"
+                  id="genderFilter"
+                  onChange={this.handleGenderChange} >
                   <option
-                    value={ 'ALL' }
+                    value={ 'DEFAULT' }
                     key={'genderOption_default'} >
                     All genders
                   </option>
@@ -101,7 +162,7 @@ class SearchFilters extends Component {
           </div>
 
           <div className="row">
-            <div className="col-lg-12">
+            <div className="col-md-4">
             </div>
           </div>
 
@@ -126,7 +187,7 @@ class SearchFilters extends Component {
 
           <div className="row">
             <div className="col-lg-12 text-right">
-              <a
+              <a className="text-secondary filterText"
                 href="true"
                 onClick={ this.switchDisplayingOfFiltersForm } >
                 Advanced search
@@ -146,5 +207,12 @@ class SearchFilters extends Component {
     );
   }
 }
+
+SearchFilters.propTypes = {
+  gender: PropTypes.string.isRequired,
+  party: PropTypes.string.isRequired,
+  setFilters: PropTypes.func.isRequired,
+  usState: PropTypes.string.isRequired,
+};
 
 export default SearchFilters;

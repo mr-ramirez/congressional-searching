@@ -4,10 +4,13 @@ import Chambers from '../../data/static/chambers';
 const initialState = {
   chamber: Chambers.HOUSE.name,
   congress: Chambers.HOUSE.maxCongress,
+  gender: 'DEFAULT',
   pageNumber: 1,
   pageSize: 10,
+  party: 'DEFAULT',
   searchResults: [],
   shouldSuggestionBoxBeDisplayed: false,
+  usState: 'DEFAULT',
   suggestions: [],
   totalPages: 0,
 };
@@ -46,6 +49,13 @@ function searchReducer(state = initialState, action) {
       return {
         ...state,
         shouldSuggestionBoxBeDisplayed: true,
+      };
+    case ActionTypes.SET_FILTERS:
+      return {
+        ...state,
+        gender: action.gender,
+        party: action.party,
+        usState: action.usState,
       };
     default:
       return state;

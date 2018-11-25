@@ -17,6 +17,15 @@ export function goToPreviousPage() {
   };
 }
 
+export function setFilters({ gender, party, usState }) {
+  return {
+    type: ActionTypes.SET_FILTERS,
+    gender,
+    party,
+    usState,
+  };
+};
+
 export function setSearchResults({ searchResults, totalPages }) {
   return {
     type: ActionTypes.SET_SEARCH_RESULTS,
@@ -44,10 +53,23 @@ export function hideSuggestionBox() {
   };
 };
 
-export function fixResultsList({ members, pageSize, searchText }) {
+export function fixResultsList({
+  gender,
+  members,
+  pageSize,
+  party,
+  searchText,
+  state,
+}) {
   return (dispatch) => {
     const filteredResults = members
-      .filter((member) => doesMemberInformationMatchSearchText({ searchText, member }))
+      .filter((member) => doesMemberInformationMatchSearchText({
+        gender,
+        member,
+        party,
+        searchText,
+        state,
+      }))
       .sort((a, b) => sortMembers({ a, b }));
 
     let totalPages = Math.trunc(filteredResults.length / pageSize);
