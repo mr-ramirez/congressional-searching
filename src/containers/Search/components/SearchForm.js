@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import {
-  startLoadingAllMembers,
+  setSuggestions,
 } from '../actions';
 
 import Chambers from '../../../data/static/chambers';
@@ -20,38 +20,35 @@ class SearchForm extends Component {
     };
   }
 
+  doesMemberInformationMatchSearchText = ({ searchText, member }) => {
+    const {
+      firstName,
+      lastName,
+      middleName,
+    } = member;
+
+    return firstName.toLowerCase().includes(searchText)
+      || lastName.toLowerCase().includes(searchText)
+      || middleName.toLowerCase().includes(searchText);
+  }
+
   textChanged = ({ value }) => {
-    this.setState({
-      searchText: value.trim() === '' ? null : value.toLowerCase(),
-    });
-    
-    const { results } = this.props;
+    const searchText = value.trim() === '' ? null : value.toLowerCase();
+    const { members } = this.props.app;
+    const { setSuggestions } = this.props;
 
-    const newSuggestions = results
-      .filter((result) => {
-        const {
-          firstName,
-          lastName,
-          middleName,
-        } = result;
-
-        const { searchText } = this.state;
-
-        return firstName.toLowerCase().includes(searchText)
-          || lastName.toLowerCase().includes(searchText)
-          || middleName.toLowerCase().includes(searchText);
-      })
+    const newSuggestions = members
+      .filter((member) => this.doesMemberInformationMatchSearchText({ searchText, member }))
       .sort((a, b) => {
         const firstMember = `${a.firstName} ${a.middleName} ${a.lastName}`;
         const secondMember = `${b.firstName} ${b.middleName} ${b.lastName}`;
 
         return ('' + firstMember).localeCompare(secondMember);
       })
-      .slice(0, 10);
+      .slice(0, 7);
 
-    this.setState({
-      suggestions: newSuggestions,
-    });
+    this.setState({ searchText });
+    setSuggestions({ suggestions: newSuggestions });
   }
 
   render() {
@@ -63,7 +60,7 @@ class SearchForm extends Component {
               <SearchInput
                 type="text"
                 onChange={this.textChanged}
-                placeholder={`Search a member of the ${this.state.chamber}`} />
+                placeholder={`Search a member of the ${this.props.search.chamber}`} />
             </form>
           </div>
         </div>
@@ -72,8 +69,14 @@ class SearchForm extends Component {
           <div className="col-lg-12">
             {
               !this.state.searchText ?
-                null : (<SuggestionBox suggestions={this.state.suggestions} />)
+                null : (<SuggestionBox suggestions={this.props.search.suggestions} />)
             }
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-lg-12">
+            <h1>LIMIT</h1>
           </div>
         </div>
       </div>
@@ -89,7 +92,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    startLoadingAllMembers: () => dispatch(startLoadingAllMembers()),
+    setSuggestions: ({ suggestions }) =>
+      dispatch(setSuggestions({ suggestions })),
   };
 }
 

@@ -28,7 +28,7 @@ export function loadAllMembers({ chamber, congress }) {
     return HttpService.get(`${congress}/${chamber}/members.json`)
       .then((response) => {
         const { results } = response;
-        const resultsMapped = results.map(item => new Member(item));
+        const resultsMapped = results[0].members.map(item => new Member(item));
 
         dispatch(setMembers(resultsMapped));
         return dispatch(finishLoadingAllMembers());
