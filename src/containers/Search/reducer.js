@@ -1,17 +1,31 @@
 import ActionTypes from './actionTypes';
+import Chambers from '../../data/static/chambers';
 
 const initialState = {
-  loading: false,
+  chamber: Chambers.HOUSE.name,
+  congress: Chambers.HOUSE.maxCongress,
+  shouldSuggestionBoxBeDisplayed: false,
+  suggestions: [],
 };
 
 function searchReducer(state = initialState, action) {
   const { type } = action;
 
   switch(type) {
-    case ActionTypes.START_LOADING_ALL_MEMBERS:
+    case ActionTypes.HIDE_SUGGESTION_BOX:
       return {
         ...state,
-        loading: true,
+        shouldSuggestionBoxBeDisplayed: false,
+      };
+    case ActionTypes.SET_SUGGESTIONS:
+      return {
+        ...state,
+        suggestions: action.suggestions,
+      };
+    case ActionTypes.SHOW_SUGGESTION_BOX:
+      return {
+        ...state,
+        shouldSuggestionBoxBeDisplayed: true,
       };
     default:
       return state;

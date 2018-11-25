@@ -2,53 +2,66 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import {
-  startLoadingAllMembers,
+  hideSuggestionBox,
+  setSuggestions,
+  showSuggestionBox,
 } from '../actions';
 
-import { Chambers } from '../../../data/static/chambers';
 import SuggestionBox from './SuggestionBox';
+import SearchInput from '../../../components/SearchInput';
 
 class SearchForm extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      chamber: Chambers.HOUSE,
       searchText: null,
-      suggestions: [],
+      shouldSuggestionBoxBeDisplayed: true,
     };
   }
 
-  textChanged = (event) => {
-    this.props.startLoadingAllMembers();
+  doesMemberInformationMatchSearchText = ({ searchText, member }) => {
+    const {
+      firstName,
+      lastName,
+      middleName,
+    } = member;
+
+    return firstName.toLowerCase().includes(searchText)
+      || lastName.toLowerCase().includes(searchText)
+      || middleName.toLowerCase().includes(searchText);
+  }
+
+  makeSuggestionBoxInvisible = () => {
+    setTimeout(() => {
+      this.props.hideSuggestionBox();
+    }, 200);
+  }
+
+  sortMembers = ({ a, b }) => {
+    const firstMember = `${a.firstName} ${a.middleName} ${a.lastName}`;
+    const secondMember = `${b.firstName} ${b.middleName} ${b.lastName}`;
+
+    return ('' + firstMember).localeCompare(secondMember);
+  }
+
+  textChanged = ({ value }) => {
+    const searchText = value.trim() === '' ? null : value.toLowerCase();
 
     const {
-      target: {
-        value,
-      }
-    } = event;
+      app: {
+        members,
+      },
+      setSuggestions,
+    } = this.props;
 
-    this.setState({
-      searchText: value.trim() === '' ? null : value.toLowerCase(),
-    });
-    
-    const { results } = this.props;
+    const newSuggestions = members
+      .filter((member) => this.doesMemberInformationMatchSearchText({ searchText, member }))
+      .sort((a, b) => this.sortMembers({ a, b }))
+      .slice(0, 7);
 
-    const newSuggestions = results.filter((result) => {
-      const {
-        firstName,
-        lastName,
-        middleName,
-      } = result;
-
-      return firstName.toLowerCase().includes(this.state.searchText)
-        || lastName.toLowerCase().includes(this.state.searchText)
-        || middleName.toLowerCase().includes(this.state.searchText);
-    });
-
-    this.setState({
-      suggestions: newSuggestions,
-    });
+    this.setState({ searchText });
+    setSuggestions({ suggestions: newSuggestions });
   }
 
   render() {
@@ -57,15 +70,12 @@ class SearchForm extends Component {
         <div className="row mt-4">
           <div className="col-lg-12">
             <form>
-              <div className="form-group">
-                <input
-                  type="text"
-                  className="form-control"
-                  id="searchInput"
-                  aria-describedby="searchInput"
-                  placeholder={`Search a member of the ${this.state.chamber}`}
-                  onChange={this.textChanged} />
-              </div>
+              <SearchInput
+                type="text"
+                onChange={this.textChanged}
+                onFocus={this.props.showSuggestionBox}
+                onBlur={this.makeSuggestionBoxInvisible}
+                placeholder={`Search a member of the ${this.props.search.chamber}`} />
             </form>
           </div>
         </div>
@@ -73,9 +83,15 @@ class SearchForm extends Component {
         <div className="row">
           <div className="col-lg-12">
             {
-              !this.state.searchText ?
-                null : (<SuggestionBox suggestions={this.state.suggestions} />)
+              !this.state.searchText || !this.props.search.shouldSuggestionBoxBeDisplayed ?
+                null : (<SuggestionBox suggestions={this.props.search.suggestions} />)
             }
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-lg-12">
+            <h1>LIMIT</h1>
           </div>
         </div>
       </div>
@@ -91,7 +107,12 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    startLoadingAllMembers: () => dispatch(startLoadingAllMembers()),
+    hideSuggestionBox: () =>
+      dispatch(hideSuggestionBox()),
+    setSuggestions: ({ suggestions }) =>
+      dispatch(setSuggestions({ suggestions })),
+    showSuggestionBox: () =>
+      dispatch(showSuggestionBox()),
   };
 }
 

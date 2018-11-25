@@ -1,11 +1,20 @@
 import ActionTypes from './actionTypes';
 
-export function startLoadingAllMembers() {
+export function setSuggestions({ suggestions }) {
   return {
-    type: ActionTypes.START_LOADING_ALL_MEMBERS,
+    type: ActionTypes.SET_SUGGESTIONS,
+    suggestions,
   };
 };
 
-// export const finishLoadingAllMembersSuccessfully = () => ({
-//   type: ActionTypes.LOADING_ALL_MEMBERS_STARTED,
-// });
+export function showSuggestionBox() {
+  return {
+    type: ActionTypes.SHOW_SUGGESTION_BOX,
+  };
+};
+
+export function hideSuggestionBox() {
+  return {
+    type: ActionTypes.HIDE_SUGGESTION_BOX,
+  };
+};
