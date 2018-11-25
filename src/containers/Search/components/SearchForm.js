@@ -12,7 +12,7 @@ import {
 import {
   doesMemberInformationMatchSearchText,
   sortMembers,
-} from '../membersFiltering';
+} from '../util';
 
 import SearchResults from './SearchResults';
 import SuggestionBox from './SuggestionBox';

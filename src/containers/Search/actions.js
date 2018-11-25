@@ -3,7 +3,7 @@ import ActionTypes from './actionTypes';
 import {
   doesMemberInformationMatchSearchText,
   sortMembers,
-} from './membersFiltering';
+} from './util';
 
 export function setSearchResults({ searchResults, totalPages }) {
   return {
