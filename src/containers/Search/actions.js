@@ -17,10 +17,13 @@ export function goToPreviousPage() {
   };
 }
 
-export function setFilters({ gender, party, usState }) {
+export function setFilters({ chamber, congress, gender, pageSize, party, usState }) {
   return {
     type: ActionTypes.SET_FILTERS,
+    congress,
+    chamber,
     gender,
+    pageSize,
     party,
     usState,
   };

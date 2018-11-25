@@ -17,6 +17,8 @@ import {
   sortMembers,
 } from '../util';
 
+import { loadAllMembers } from '../../App/actions';
+
 import SearchFilters from './SearchFilters';
 import SearchResults from './SearchResults';
 import SuggestionBox from './SuggestionBox';
@@ -34,15 +36,21 @@ class SearchForm extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     const {
+      chamber,
+      congress,
       gender,
+      pageSize,
       party,
       searchResults,
       usState,
     } = this.props.search;
-
-    if ((gender !== nextProps.search.gender
+    if (chamber !== nextProps.search.chamber
+      || congress !== nextProps.search.congress) {
+      this.restart({ nextProps });
+    } else if ((gender !== nextProps.search.gender
       || party !== nextProps.search.party
-      || usState !== nextProps.search.usState)
+      || usState !== nextProps.search.usState
+      || pageSize !== nextProps.search.pageSize)
       && searchResults.length > 0) {
       this.processFixing(nextProps);
     }
@@ -52,6 +60,19 @@ class SearchForm extends Component {
     setTimeout(() => {
       this.props.hideSuggestionBox();
     }, 200);
+  }
+
+  restart = ({ nextProps }) => {
+    this.props.loadAllMembers({
+      chamber: nextProps.search.chamber,
+      congress: nextProps.search.congress,
+    });
+
+    this.props.setSearchResults({ searchResults: [], totalPages: 0 });
+
+    this.props.setSuggestions({ suggestions: [] });
+
+    this.setState({ searchText: '' });
   }
 
   startFixingResultsList = () => {
@@ -129,22 +150,24 @@ class SearchForm extends Component {
           </div>
         </div>
 
-        <div className="row mt-1">
-          <div className="col-lg-12">
-            <SearchFilters
-              gender={this.props.search.gender}
-              party={this.props.search.party}
-              usState={this.props.search.usState}
-              setFilters={this.props.setFilters} />
-          </div>
-        </div>
-
         <div className="row">
           <div className="col-lg-12">
             {
               !this.state.searchText || !this.props.search.shouldSuggestionBoxBeDisplayed ?
                 null : (<SuggestionBox suggestions={this.props.search.suggestions} />)
             }
+          </div>
+        </div>
+
+        <div className="row mt-1">
+          <div className="col-lg-12">
+            <SearchFilters
+              congress={this.props.search.congress}
+              chamber={this.props.search.chamber}
+              gender={this.props.search.gender}
+              party={this.props.search.party}
+              usState={this.props.search.usState}
+              setFilters={this.props.setFilters} />
           </div>
         </div>
 
@@ -196,9 +219,12 @@ function mapDispatchToProps(dispatch) {
 
     hideSuggestionBox: () =>
       dispatch(hideSuggestionBox()),
+
+    loadAllMembers: ({ chamber, congress }) =>
+      dispatch(loadAllMembers({ chamber, congress })),
     
-    setFilters: ({ gender, party, usState }) =>
-      dispatch(setFilters({ gender, party, usState })),
+    setFilters: ({ chamber, congress, gender, pageSize, party, usState }) =>
+      dispatch(setFilters({ chamber, congress, gender, pageSize, party, usState })),
 
     setSearchResults: ({ searchResults, totalPages }) =>
       dispatch(setSearchResults({ searchResults, totalPages })),

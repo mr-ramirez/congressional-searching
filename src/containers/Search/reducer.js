@@ -39,6 +39,7 @@ function searchReducer(state = initialState, action) {
         ...state,
         searchResults: action.searchResults,
         totalPages: action.totalPages,
+        pageNumber: 1,
       };
     case ActionTypes.SET_SUGGESTIONS:
       return {
@@ -53,7 +54,10 @@ function searchReducer(state = initialState, action) {
     case ActionTypes.SET_FILTERS:
       return {
         ...state,
+        congress: action.congress,
+        chamber: action.chamber,
         gender: action.gender,
+        pageSize: action.pageSize,
         party: action.party,
         usState: action.usState,
       };
