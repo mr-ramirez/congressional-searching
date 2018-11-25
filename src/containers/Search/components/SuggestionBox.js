@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import '../styles/SuggestionBox.css';
 
-export default class SuggestionBox extends Component {
+class SuggestionBox extends Component {
   getSuggestions() {
     const { suggestions } = this.props;
 
@@ -48,3 +48,5 @@ export default class SuggestionBox extends Component {
     );
   }
 }
+
+export default SuggestionBox;

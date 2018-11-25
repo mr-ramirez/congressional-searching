@@ -27,6 +27,7 @@ class SearchInput extends Component {
           <button
             className="btn btn-info"
             type="button"
+            onClick={this.props.onClick}
             id="searchInput_Button">
             Search
           </button>
@@ -38,10 +39,11 @@ class SearchInput extends Component {
 
 SearchInput.propTypes = {
   onBlur: PropTypes.func,
-  onChange: PropTypes.func,
+  onChange: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
   onFocus: PropTypes.func,
-  placeholder: PropTypes.string,
-  type: PropTypes.string,
+  placeholder: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
 };
 
 export default SearchInput;

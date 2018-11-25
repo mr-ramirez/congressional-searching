@@ -4,8 +4,12 @@ import Chambers from '../../data/static/chambers';
 const initialState = {
   chamber: Chambers.HOUSE.name,
   congress: Chambers.HOUSE.maxCongress,
+  pageNumber: 0,
+  pageSize: 10,
+  searchResults: [],
   shouldSuggestionBoxBeDisplayed: false,
   suggestions: [],
+  totalPages: 0,
 };
 
 function searchReducer(state = initialState, action) {
@@ -16,6 +20,13 @@ function searchReducer(state = initialState, action) {
       return {
         ...state,
         shouldSuggestionBoxBeDisplayed: false,
+      };
+    case ActionTypes.SET_SEARCH_RESULTS:
+      return {
+        ...state,
+        pageNumber: action.pageNumber,
+        searchResults: action.searchResults,
+        totalPages: action.totalPages,
       };
     case ActionTypes.SET_SUGGESTIONS:
       return {
