@@ -2,11 +2,21 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import {
+  fixResultsList,
+  goToNextPage,
+  goToPreviousPage,
   hideSuggestionBox,
+  setSearchResults,
   setSuggestions,
   showSuggestionBox,
 } from '../actions';
 
+import {
+  doesMemberInformationMatchSearchText,
+  sortMembers,
+} from '../util';
+
+import SearchResults from './SearchResults';
 import SuggestionBox from './SuggestionBox';
 import SearchInput from '../../../components/SearchInput';
 
@@ -15,34 +25,25 @@ class SearchForm extends Component {
     super(props);
 
     this.state = {
-      searchText: null,
+      searchText: '',
       shouldSuggestionBoxBeDisplayed: true,
     };
   }
-
-  doesMemberInformationMatchSearchText = ({ searchText, member }) => {
-    const {
-      firstName,
-      lastName,
-      middleName,
-    } = member;
-
-    return firstName.toLowerCase().includes(searchText)
-      || lastName.toLowerCase().includes(searchText)
-      || middleName.toLowerCase().includes(searchText);
-  }
-
+  
   makeSuggestionBoxInvisible = () => {
     setTimeout(() => {
       this.props.hideSuggestionBox();
     }, 200);
   }
 
-  sortMembers = ({ a, b }) => {
-    const firstMember = `${a.firstName} ${a.middleName} ${a.lastName}`;
-    const secondMember = `${b.firstName} ${b.middleName} ${b.lastName}`;
+  startFixingResultsList = () => {
+    this.props.hideSuggestionBox();
 
-    return ('' + firstMember).localeCompare(secondMember);
+    this.props.fixResultsList({
+      members: this.props.app.members,
+      pageSize: this.props.search.pageSize,
+      searchText: this.state.searchText,
+    });
   }
 
   textChanged = ({ value }) => {
@@ -56,8 +57,8 @@ class SearchForm extends Component {
     } = this.props;
 
     const newSuggestions = members
-      .filter((member) => this.doesMemberInformationMatchSearchText({ searchText, member }))
-      .sort((a, b) => this.sortMembers({ a, b }))
+      .filter((member) => doesMemberInformationMatchSearchText({ searchText, member }))
+      .sort((a, b) => sortMembers({ a, b }))
       .slice(0, 7);
 
     this.setState({ searchText });
@@ -69,14 +70,14 @@ class SearchForm extends Component {
       <div>
         <div className="row mt-4">
           <div className="col-lg-12">
-            <form>
-              <SearchInput
-                type="text"
-                onChange={this.textChanged}
-                onFocus={this.props.showSuggestionBox}
-                onBlur={this.makeSuggestionBoxInvisible}
-                placeholder={`Search a member of the ${this.props.search.chamber}`} />
-            </form>
+            <SearchInput
+              type="text"
+              onChange={this.textChanged}
+              onClick={this.startFixingResultsList}
+              onFocus={this.props.showSuggestionBox}
+              onBlur={this.makeSuggestionBoxInvisible}
+              onPressEnter={this.startFixingResultsList}
+              placeholder={`Search a member of the ${this.props.search.chamber}`} />
           </div>
         </div>
 
@@ -90,8 +91,13 @@ class SearchForm extends Component {
         </div>
 
         <div className="row">
-          <div className="col-lg-12">
-            <h1>LIMIT</h1>
+          <div className="col-lg-12 mt-3">
+            <SearchResults
+              pageNumber={this.props.search.pageNumber}
+              results={this.props.search.searchResults}
+              totalPages={this.props.search.totalPages}
+              nextPageAction={this.props.goToNextPage}
+              previousPageAction={this.props.goToPreviousPage} />
           </div>
         </div>
       </div>
@@ -107,10 +113,24 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    fixResultsList: ({ members, pageSize, searchText }) =>
+      dispatch(fixResultsList({ members, pageSize, searchText })),
+
+    goToNextPage: () =>
+      dispatch(goToNextPage()),
+
+    goToPreviousPage: () =>
+      dispatch(goToPreviousPage()),
+
     hideSuggestionBox: () =>
       dispatch(hideSuggestionBox()),
+
+    setSearchResults: ({ searchResults, totalPages }) =>
+      dispatch(setSearchResults({ searchResults, totalPages })),
+
     setSuggestions: ({ suggestions }) =>
       dispatch(setSuggestions({ suggestions })),
+
     showSuggestionBox: () =>
       dispatch(showSuggestionBox()),
   };
