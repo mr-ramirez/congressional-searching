@@ -16,6 +16,7 @@ import {
   sortMembers,
 } from '../util';
 
+import SearchFilters from './SearchFilters';
 import SearchResults from './SearchResults';
 import SuggestionBox from './SuggestionBox';
 import SearchInput from '../../../components/SearchInput';
@@ -78,6 +79,12 @@ class SearchForm extends Component {
               onBlur={this.makeSuggestionBoxInvisible}
               onPressEnter={this.startFixingResultsList}
               placeholder={`Search a member of the ${this.props.search.chamber}`} />
+          </div>
+        </div>
+
+        <div className="row mt-1">
+          <div className="col-lg-12">
+            <SearchFilters />
           </div>
         </div>
 
