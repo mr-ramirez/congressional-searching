@@ -12,7 +12,7 @@ export default class SuggestionBox extends Component {
       );
     }
     return (
-      <div className="border border-info">
+      <div className="list-group">
         {
           suggestions.map((suggestion, index) => {
             const {
@@ -20,25 +20,13 @@ export default class SuggestionBox extends Component {
               lastName,
               middleName,
               state,
-              title,
             } = suggestion;
 
             return (
-              <div className="row py-3 px-2" key={index}>
-                <div className="col-lg-12">
-                  <div className="row">
-                    <div className="col-lg-12">
-                      <p>{`${title} ${firstName} ${middleName} ${lastName}`}</p>
-                    </div>
-                  </div>
-
-                  <div className="row">
-                    <div className="col-lg-12">
-                      <p>{`${state}`}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <a href
+                className="list-group-item list-group-item-action text-left">
+                {`${firstName} ${middleName} ${lastName} - ${state}`}
+              </a>
             );
           })
         }

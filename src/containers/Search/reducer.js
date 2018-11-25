@@ -1,18 +1,15 @@
-import ActionTypes from './actionTypes';
+// import ActionTypes from './actionTypes';
+import Chambers from '../../data/static/chambers';
 
 const initialState = {
-  loading: false,
+  chamber: Chambers.HOUSE.name,
+  congress: Chambers.HOUSE.minCongress,
 };
 
 function searchReducer(state = initialState, action) {
   const { type } = action;
 
   switch(type) {
-    case ActionTypes.START_LOADING_ALL_MEMBERS:
-      return {
-        ...state,
-        loading: true,
-      };
     default:
       return state;
   }

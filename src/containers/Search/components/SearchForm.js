@@ -5,46 +5,49 @@ import {
   startLoadingAllMembers,
 } from '../actions';
 
-import { Chambers } from '../../../data/static/chambers';
+import Chambers from '../../../data/static/chambers';
 import SuggestionBox from './SuggestionBox';
+import SearchInput from '../../../components/SearchInput';
 
 class SearchForm extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      chamber: Chambers.HOUSE,
+      chamber: Chambers.HOUSE.name,
       searchText: null,
       suggestions: [],
     };
   }
 
-  textChanged = (event) => {
-    this.props.startLoadingAllMembers();
-
-    const {
-      target: {
-        value,
-      }
-    } = event;
-
+  textChanged = ({ value }) => {
     this.setState({
       searchText: value.trim() === '' ? null : value.toLowerCase(),
     });
     
     const { results } = this.props;
 
-    const newSuggestions = results.filter((result) => {
-      const {
-        firstName,
-        lastName,
-        middleName,
-      } = result;
+    const newSuggestions = results
+      .filter((result) => {
+        const {
+          firstName,
+          lastName,
+          middleName,
+        } = result;
 
-      return firstName.toLowerCase().includes(this.state.searchText)
-        || lastName.toLowerCase().includes(this.state.searchText)
-        || middleName.toLowerCase().includes(this.state.searchText);
-    });
+        const { searchText } = this.state;
+
+        return firstName.toLowerCase().includes(searchText)
+          || lastName.toLowerCase().includes(searchText)
+          || middleName.toLowerCase().includes(searchText);
+      })
+      .sort((a, b) => {
+        const firstMember = `${a.firstName} ${a.middleName} ${a.lastName}`;
+        const secondMember = `${b.firstName} ${b.middleName} ${b.lastName}`;
+
+        return ('' + firstMember).localeCompare(secondMember);
+      })
+      .slice(0, 10);
 
     this.setState({
       suggestions: newSuggestions,
@@ -57,15 +60,10 @@ class SearchForm extends Component {
         <div className="row mt-4">
           <div className="col-lg-12">
             <form>
-              <div className="form-group">
-                <input
-                  type="text"
-                  className="form-control"
-                  id="searchInput"
-                  aria-describedby="searchInput"
-                  placeholder={`Search a member of the ${this.state.chamber}`}
-                  onChange={this.textChanged} />
-              </div>
+              <SearchInput
+                type="text"
+                onChange={this.textChanged}
+                placeholder={`Search a member of the ${this.state.chamber}`} />
             </form>
           </div>
         </div>
