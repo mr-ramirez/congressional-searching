@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 import {
   fixResultsList,
+  goToNextPage,
+  goToPreviousPage,
   hideSuggestionBox,
   setSearchResults,
   setSuggestions,
@@ -93,7 +95,9 @@ class SearchForm extends Component {
             <SearchResults
               pageNumber={this.props.search.pageNumber}
               results={this.props.search.searchResults}
-              totalPages={this.props.search.totalPages} />
+              totalPages={this.props.search.totalPages}
+              nextPageAction={this.props.goToNextPage}
+              previousPageAction={this.props.goToPreviousPage} />
           </div>
         </div>
       </div>
@@ -111,6 +115,12 @@ function mapDispatchToProps(dispatch) {
   return {
     fixResultsList: ({ members, pageSize, searchText }) =>
       dispatch(fixResultsList({ members, pageSize, searchText })),
+
+    goToNextPage: () =>
+      dispatch(goToNextPage()),
+
+    goToPreviousPage: () =>
+      dispatch(goToPreviousPage()),
 
     hideSuggestionBox: () =>
       dispatch(hideSuggestionBox()),

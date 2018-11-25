@@ -5,6 +5,18 @@ import {
   sortMembers,
 } from './util';
 
+export function goToNextPage() {
+  return {
+    type: ActionTypes.GO_TO_NEXT_PAGE,
+  };
+}
+
+export function goToPreviousPage() {
+  return {
+    type: ActionTypes.GO_TO_PREVIOUS_PAGE,
+  };
+}
+
 export function setSearchResults({ searchResults, totalPages }) {
   return {
     type: ActionTypes.SET_SEARCH_RESULTS,

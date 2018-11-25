@@ -4,7 +4,7 @@ import Chambers from '../../data/static/chambers';
 const initialState = {
   chamber: Chambers.HOUSE.name,
   congress: Chambers.HOUSE.maxCongress,
-  pageNumber: 0,
+  pageNumber: 1,
   pageSize: 10,
   searchResults: [],
   shouldSuggestionBoxBeDisplayed: false,
@@ -16,6 +16,16 @@ function searchReducer(state = initialState, action) {
   const { type } = action;
 
   switch(type) {
+    case ActionTypes.GO_TO_NEXT_PAGE:
+      return {
+        ...state,
+        pageNumber: state.pageNumber + 1,
+      };
+    case ActionTypes.GO_TO_PREVIOUS_PAGE:
+      return {
+        ...state,
+        pageNumber: state.pageNumber - 1,
+      };
     case ActionTypes.HIDE_SUGGESTION_BOX:
       return {
         ...state,
