@@ -14,6 +14,7 @@ import {
   sortMembers,
 } from '../membersFiltering';
 
+import SearchResults from './SearchResults';
 import SuggestionBox from './SuggestionBox';
 import SearchInput from '../../../components/SearchInput';
 
@@ -22,7 +23,7 @@ class SearchForm extends Component {
     super(props);
 
     this.state = {
-      searchText: null,
+      searchText: '',
       shouldSuggestionBoxBeDisplayed: true,
     };
   }
@@ -34,6 +35,8 @@ class SearchForm extends Component {
   }
 
   startFixingResultsList = () => {
+    this.props.hideSuggestionBox();
+
     this.props.fixResultsList({
       members: this.props.app.members,
       pageSize: this.props.search.pageSize,
@@ -65,15 +68,14 @@ class SearchForm extends Component {
       <div>
         <div className="row mt-4">
           <div className="col-lg-12">
-            <form>
-              <SearchInput
-                type="text"
-                onChange={this.textChanged}
-                onClick={this.startFixingResultsList}
-                onFocus={this.props.showSuggestionBox}
-                onBlur={this.makeSuggestionBoxInvisible}
-                placeholder={`Search a member of the ${this.props.search.chamber}`} />
-            </form>
+            <SearchInput
+              type="text"
+              onChange={this.textChanged}
+              onClick={this.startFixingResultsList}
+              onFocus={this.props.showSuggestionBox}
+              onBlur={this.makeSuggestionBoxInvisible}
+              onPressEnter={this.startFixingResultsList}
+              placeholder={`Search a member of the ${this.props.search.chamber}`} />
           </div>
         </div>
 
@@ -87,8 +89,11 @@ class SearchForm extends Component {
         </div>
 
         <div className="row">
-          <div className="col-lg-12">
-            <h1>LIMIT</h1>
+          <div className="col-lg-12 mt-3">
+            <SearchResults
+              pageNumber={this.props.search.pageNumber}
+              results={this.props.search.searchResults}
+              totalPages={this.props.search.totalPages} />
           </div>
         </div>
       </div>

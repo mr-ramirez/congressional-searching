@@ -24,7 +24,6 @@ function searchReducer(state = initialState, action) {
     case ActionTypes.SET_SEARCH_RESULTS:
       return {
         ...state,
-        pageNumber: action.pageNumber,
         searchResults: action.searchResults,
         totalPages: action.totalPages,
       };

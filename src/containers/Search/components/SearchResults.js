@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class SearchResults extends Component {
   render() {
@@ -7,15 +8,18 @@ class SearchResults extends Component {
         <div className="col-lg-12">
 
           {
-            this.props.results.map((item, index) => (
-              <div className="card" key={`resultItem${index}`}>
-                <div className="card-body">
-                  <h5 className="card-title">Special title treatment</h5>
-                  <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                  <a href="#" className="btn btn-primary">Go somewhere</a>
+            this.props.results.length > 0 ?
+              (this.props.results[this.props.pageNumber].map((item, index) => (
+                <div className="card mb-3" key={`resultItem${index}`}>
+                  <div className="card-body">
+                    <h5 className="card-title">Special title treatment</h5>
+                    <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="true" className="btn btn-primary">Go somewhere</a>
+                  </div>
                 </div>
-              </div>
-            ))
+              )))
+              :
+              null
           }
 
         </div>
