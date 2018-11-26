@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App.js WHEN property <loading> is true and <members> is not empty THEN it should render with a spinner and the search component 1`] = `
+<div
+  className="App"
+>
+  <header
+    className="Header_container"
+  >
+    <img
+      alt="logo"
+      className="Header_logo"
+      src="logo.png"
+    />
+    <h1
+      className="Header_title"
+    >
+      React Programming Exercise
+    </h1>
+  </header>
+  <section
+    className="container"
+  >
+    <spinner />
+    <SearchForm
+      results={Array []}
+    />
+  </section>
+</div>
+`;
