@@ -10,14 +10,67 @@ import React, { Component } from 'react';
 import SearchResultsItem from './SearchResultsItem';
 
 class SearchResults extends Component {
-  render() {
+  getPaginationControls = () => {
     const {
       pageNumber,
       results,
       totalPages,
     } = this.props;
+
+    return (
+      results.length > 0 ?
+        <div className="row my-2">
+          <div className="col-lg-4 text-center">
+          </div>
+
+          <div className="col-lg-4 text-center">
+            <div className="row">
+              <div className="col-lg-4 text-left">
+                <button
+                  className="btn btn-info"
+                  type="button"
+                  id="previous"
+                  disabled={ pageNumber === 1 }
+                  onClick={this.props.previousPageAction} >
+                  <FontAwesomeIcon icon={faArrowLeft} />
+                </button>
+              </div>
+
+              <div className="col-lg-4 text-center">
+                <h4>
+                  { pageNumber } / { totalPages }
+                </h4>
+              </div>
+
+              <div className="col-lg-4 text-right">
+                <button
+                  className="btn btn-info"
+                  type="button"
+                  id="previous"
+                  disabled={ pageNumber === totalPages }
+                  onClick={this.props.nextPageAction} >
+                  <FontAwesomeIcon icon={faArrowRight} />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-lg-4 text-center">
+          </div>
+        </div>
+        :
+        null
+    );
+  }
+  render() {
+    const {
+      pageNumber,
+      results,
+    } = this.props;
     return (
       <div>
+        { this.getPaginationControls() }
+
         <div className="row">
           <div className="col-lg-12">
             {
@@ -34,50 +87,7 @@ class SearchResults extends Component {
           </div>
         </div>
 
-        {
-          results.length > 0 ?
-            <div className="row my-3">
-              <div className="col-lg-4 text-center">
-              </div>
-
-              <div className="col-lg-4 text-center">
-                <div className="row">
-                  <div className="col-lg-4 text-left">
-                    <button
-                      className="btn btn-info"
-                      type="button"
-                      id="previous"
-                      disabled={ pageNumber === 1 }
-                      onClick={this.props.previousPageAction} >
-                      <FontAwesomeIcon icon={faArrowLeft} />
-                    </button>
-                  </div>
-
-                  <div className="col-lg-4 text-center">
-                    <h4>
-                      { pageNumber } / { totalPages }
-                    </h4>
-                  </div>
-
-                  <div className="col-lg-4 text-right">
-                    <button
-                      className="btn btn-info"
-                      type="button"
-                      id="previous"
-                      disabled={ pageNumber === totalPages }
-                      onClick={this.props.nextPageAction} >
-                      <FontAwesomeIcon icon={faArrowRight} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-lg-4 text-center">
-              </div>
-            </div>
-            :
-            null
-        }
+        { this.getPaginationControls() }
       </div>
     );
   }

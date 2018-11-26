@@ -1,11 +1,12 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import '../App.css';
 import { loadAllMembers } from '../actions';
 import Header from '../../../components/Header';
-import SearchForm from '../../Search/components/SearchForm';
-import spinner from '../../../components/Spinner';
+import Search from '../../Search/components/Search';
+import Spinner from '../../../components/Spinner';
 
 class App extends Component {
   constructor() {
@@ -26,7 +27,7 @@ class App extends Component {
     const { loading } = this.props.app;
 
     if (loading) {
-      return (<spinner />);
+      return (<Spinner />);
     }
     return null;
   }
@@ -38,10 +39,16 @@ class App extends Component {
         <Header />
 
         <section className="container">
+          <div className="row mt-4 mb-2">
+            <div className="col-lg-12 text-left">
+              <h3 className="lead">Members of the Congress Search Engine</h3>
+            </div>
+          </div>
+
           { this.getLoadingSpinner() }
           {
             this.props.app.members.length > 0 ?
-              <SearchForm results={this.state.members} />
+              <Search />
             :
               null
           }
@@ -50,6 +57,11 @@ class App extends Component {
     );
   }
 }
+
+App.propTypes = {
+  app: PropTypes.object.isRequired,
+  search: PropTypes.object.isRequired,
+};
 
 function mapStateToProps(state) {
   return {

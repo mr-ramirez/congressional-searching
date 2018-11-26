@@ -2,6 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 class SearchInput extends Component {
+  constructor(props) {
+    super(props);
+    
+    this.state = {
+      value: '',
+    };
+  }
+  
   handleOnSubmit = (event) => {
     event.preventDefault();
     this.props.onPressEnter();
@@ -28,7 +36,8 @@ class SearchInput extends Component {
             onChange={this.textChanged}
             onFocus={this.props.onFocus}
             onKeyPress={this.handleKeyPress}
-            onBlur={this.props.onBlur} />
+            onBlur={this.props.onBlur}
+            value={this.props.currentValue} />
 
           <div className="input-group-append">
             <button
@@ -46,6 +55,7 @@ class SearchInput extends Component {
 }
 
 SearchInput.propTypes = {
+  currentValue: PropTypes.string.isRequired,
   onBlur: PropTypes.func,
   onChange: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import {
   fixResultsList,
@@ -24,7 +25,7 @@ import SearchResults from './SearchResults';
 import SuggestionBox from './SuggestionBox';
 import SearchInput from '../../../components/SearchInput';
 
-class SearchForm extends Component {
+class Search extends Component {
   constructor(props) {
     super(props);
 
@@ -76,6 +77,10 @@ class SearchForm extends Component {
   }
 
   startFixingResultsList = () => {
+    if (!this.state.searchText) {
+      return;
+    }
+
     this.props.hideSuggestionBox();
 
     this.processFixing({
@@ -123,7 +128,7 @@ class SearchForm extends Component {
   
 
   textChanged = ({ value }) => {
-    const searchText = value.trim() === '' ? null : value.toLowerCase();
+    const searchText = value.trim() === '' ? '' : value.toLowerCase();
 
     const {
       app: {
@@ -155,7 +160,7 @@ class SearchForm extends Component {
   render() {
     return (
       <div>
-        <div className="row mt-4">
+        <div className="row">
           <div className="col-lg-12">
             <SearchInput
               type="text"
@@ -164,7 +169,8 @@ class SearchForm extends Component {
               onFocus={this.props.showSuggestionBox}
               onBlur={this.makeSuggestionBoxInvisible}
               onPressEnter={this.startFixingResultsList}
-              placeholder={`Search a member of the ${this.props.search.chamber}`} />
+              placeholder={`Search a member of the ${this.props.search.chamber}`}
+              currentValue={this.state.searchText} />
           </div>
         </div>
 
@@ -194,7 +200,7 @@ class SearchForm extends Component {
         </div>
 
         <div className="row">
-          <div className="col-lg-12 mt-3">
+          <div className="col-lg-12 mt-1">
             <SearchResults
               pageNumber={this.props.search.pageNumber}
               results={this.props.search.searchResults}
@@ -207,6 +213,11 @@ class SearchForm extends Component {
     );
   }
 }
+
+Search.propTypes = {
+  app: PropTypes.object.isRequired,
+  search: PropTypes.object.isRequired,
+};
 
 function mapStateToProps(state) {
   return {
@@ -259,4 +270,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchForm);
+export default connect(mapStateToProps, mapDispatchToProps)(Search);

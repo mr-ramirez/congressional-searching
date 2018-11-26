@@ -2,7 +2,7 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import App from '../App';
 
-jest.mock('../../../Search/components/SearchForm', () => 'SearchForm');
+jest.mock('../../../Search/components/Search', () => 'Search');
 jest.mock('../../../../components/Spinner', () => 'Spinner');
 
 describe('App.js', () => {
@@ -37,8 +37,8 @@ describe('App.js', () => {
       const tree = component.toJSON();
       
       expect(tree).toMatchSnapshot();
-      expect(tree.children[1].children[0].type).toEqual('spinner');
-      expect(tree.children[1].children[1].type).toEqual('SearchForm');
+      expect(tree.children[1].children[1].type).toEqual('Spinner');
+      expect(tree.children[1].children[2].type).toEqual('Search');
     });
   });
 });

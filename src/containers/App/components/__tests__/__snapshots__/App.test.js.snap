@@ -21,10 +21,21 @@ exports[`App.js WHEN property <loading> is true and <members> is not empty THEN 
   <section
     className="container"
   >
-    <spinner />
-    <SearchForm
-      results={Array []}
-    />
+    <div
+      className="row mt-4 mb-2"
+    >
+      <div
+        className="col-lg-12 text-left"
+      >
+        <h3
+          className="lead"
+        >
+          Members of the Congress Search Engine
+        </h3>
+      </div>
+    </div>
+    <Spinner />
+    <Search />
   </section>
 </div>
 `;

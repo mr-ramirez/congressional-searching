@@ -16,5 +16,3 @@ bk-*.log
 *.njsproj
 *.sln
 *.sublime-*
-
-src/config/config.js

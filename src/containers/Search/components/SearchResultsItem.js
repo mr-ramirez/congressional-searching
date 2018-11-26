@@ -15,9 +15,9 @@ class SearchResultsItem extends Component {
     const { index } = this.props;
 
     return (index % 2 === 0) ?
-      'card mb-3 border border-info'
+      'card my-2 border border-info'
         :
-      'card mb-3 border border-secondary';
+      'card my-2 border border-secondary';
   }
 
   getCardHeaderMainStyleClass = () => {
@@ -62,6 +62,7 @@ class SearchResultsItem extends Component {
       gender,
       lastName,
       middleName,
+      nextElection,
       officeAddress,
       party,
       phoneNumber,
@@ -184,7 +185,25 @@ class SearchResultsItem extends Component {
           </div>
           
           <div className="row">
+            <div className="col-md-6">
+              <div className="row">
+                <div className="col-lg-4">
+                  <p className="subtitle m-0">Next year up for election:</p>
+                </div>
+
+                <div className="col-lg-8">
+                  <p className="m-0">{ nextElection }</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-md-6">
+            </div>
+          </div>
+          
+          <div className="row">
             <div className="col-lg-12 text-right">
+              <p className="m-0 pr-4">Social media links: </p>
               {
                 website !== '' ?
                   <a href={website} target="blank">
