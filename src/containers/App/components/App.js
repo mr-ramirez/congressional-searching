@@ -41,7 +41,7 @@ class App extends Component {
         <section className="container">
           <div className="row mt-4 mb-2">
             <div className="col-lg-12 text-left">
-              <h3 className="lead">Members of the Congress Search Engine</h3>
+              <h3 className="lead">Search Engine for the Congress of the United States</h3>
             </div>
           </div>
 
