@@ -1,4 +1,3 @@
-import 'isomorphic-fetch';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
@@ -6,7 +5,7 @@ import '../App.css';
 import { loadAllMembers } from '../actions';
 import Header from '../../../components/Header';
 import SearchForm from '../../Search/components/SearchForm';
-import Spinner from '../../../components/Spinner';
+import spinner from '../../../components/Spinner';
 
 class App extends Component {
   constructor() {
@@ -27,7 +26,7 @@ class App extends Component {
     const { loading } = this.props.app;
 
     if (loading) {
-      return (<Spinner />);
+      return (<spinner />);
     }
     return null;
   }
@@ -39,9 +38,6 @@ class App extends Component {
         <Header />
 
         <section className="container">
-          {/*
-            Your app should render this part of the page.
-          */}
           { this.getLoadingSpinner() }
           {
             this.props.app.members.length > 0 ?
