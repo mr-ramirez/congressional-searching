@@ -52,7 +52,7 @@ class SearchForm extends Component {
       || usState !== nextProps.search.usState
       || pageSize !== nextProps.search.pageSize)
       && searchResults.length > 0) {
-      this.processFixing(nextProps);
+      this.processFixing({ props: nextProps });
     }
   }
   
@@ -77,10 +77,28 @@ class SearchForm extends Component {
 
   startFixingResultsList = () => {
     this.props.hideSuggestionBox();
-    this.processFixing(this.props);
+
+    this.processFixing({
+      props: this.props,
+    });
   }
 
-  processFixing = (props) => {
+  suggestionClicked = ({ suggestion }) => {
+    const {
+      firstName,
+      lastName,
+      middleName,
+    } = suggestion;
+
+    this.setState({ searchText: `${firstName} ${middleName} ${lastName}` });
+
+    this.props.setSearchResults({
+      searchResults: [[suggestion]],
+      totalPages: 1,
+    });
+  }
+
+  processFixing = ({ props }) => {
     const {
       app: {
         members,
@@ -154,7 +172,11 @@ class SearchForm extends Component {
           <div className="col-lg-12">
             {
               !this.state.searchText || !this.props.search.shouldSuggestionBoxBeDisplayed ?
-                null : (<SuggestionBox suggestions={this.props.search.suggestions} />)
+                null
+                :
+                (<SuggestionBox
+                  suggestions={this.props.search.suggestions}
+                  suggestionClicked={this.suggestionClicked} />)
             }
           </div>
         </div>

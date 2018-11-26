@@ -16,7 +16,8 @@ export function doesMemberInformationMatchSearchText({
 
   const name = `${firstName} ${middleName} ${lastName}`;
 
-  const nameConfition = name.toLowerCase().includes(searchText);
+  const nameConfition = name.trim().toLowerCase()
+    .includes(searchText.trim().toLowerCase());
   
   const genderCondition = (gender === member.gender || gender === 'DEFAULT');
   

@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
 import '../styles/SuggestionBox.css';
 
 class SuggestionBox extends Component {
@@ -26,7 +28,7 @@ class SuggestionBox extends Component {
               } = suggestion;
 
               return (
-                <a onClick={() => { console.log('>>>>>>> CLICKED') }}
+                <a onClick={() => this.handleSuggesstionSelected({ suggestion })}
                   className="list-group-item list-group-item-action text-left"
                   key={`suggestion${index}`}>
                   {`${firstName} ${middleName} ${lastName} - ${state}`}
@@ -40,6 +42,10 @@ class SuggestionBox extends Component {
     return null;
   }
 
+  handleSuggesstionSelected = ({ suggestion }) => {
+    this.props.suggestionClicked({ suggestion });
+  }
+
   render() {
     return (
       <div>
@@ -48,5 +54,9 @@ class SuggestionBox extends Component {
     );
   }
 }
+
+SuggestionBox.propTypes = {
+  suggestionClicked: PropTypes.func.isRequired,
+};
 
 export default SuggestionBox;
