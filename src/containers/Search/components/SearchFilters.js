@@ -334,6 +334,7 @@ SearchFilters.propTypes = {
   party: PropTypes.string.isRequired,
   setFilters: PropTypes.func.isRequired,
   usState: PropTypes.string.isRequired,
+  pageSize: PropTypes.number.isRequired,
 };
 
 export default SearchFilters;

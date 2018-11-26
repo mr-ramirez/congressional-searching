@@ -20,12 +20,9 @@ class SearchResults extends Component {
     return (
       results.length > 0 ?
         <div className="row my-2">
-          <div className="col-lg-4 text-center">
-          </div>
-
-          <div className="col-lg-4 text-center">
+          <div className="col-lg-12 text-center">
             <div className="row">
-              <div className="col-lg-4 text-left">
+              <div className="col-4 text-left">
                 <button
                   className="btn btn-info"
                   type="button"
@@ -36,13 +33,13 @@ class SearchResults extends Component {
                 </button>
               </div>
 
-              <div className="col-lg-4 text-center">
+              <div className="col-4 text-center">
                 <h4>
                   { pageNumber } / { totalPages }
                 </h4>
               </div>
 
-              <div className="col-lg-4 text-right">
+              <div className="col-4 text-right">
                 <button
                   className="btn btn-info"
                   type="button"
@@ -53,9 +50,6 @@ class SearchResults extends Component {
                 </button>
               </div>
             </div>
-          </div>
-
-          <div className="col-lg-4 text-center">
           </div>
         </div>
         :

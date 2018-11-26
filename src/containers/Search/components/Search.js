@@ -42,7 +42,6 @@ class Search extends Component {
       gender,
       pageSize,
       party,
-      searchResults,
       usState,
     } = this.props.search;
     if (chamber !== nextProps.search.chamber
@@ -52,7 +51,7 @@ class Search extends Component {
       || party !== nextProps.search.party
       || usState !== nextProps.search.usState
       || pageSize !== nextProps.search.pageSize)
-      && searchResults.length > 0) {
+      && this.state.searchText !== '') {
       this.processFixing({ props: nextProps });
     }
   }
@@ -195,7 +194,8 @@ class Search extends Component {
               gender={this.props.search.gender}
               party={this.props.search.party}
               usState={this.props.search.usState}
-              setFilters={this.props.setFilters} />
+              setFilters={this.props.setFilters}
+              pageSize={this.props.search.pageSize} />
           </div>
         </div>
 
