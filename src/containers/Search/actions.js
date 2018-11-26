@@ -17,6 +17,18 @@ export function goToPreviousPage() {
   };
 }
 
+export function setFilters({ chamber, congress, gender, pageSize, party, usState }) {
+  return {
+    type: ActionTypes.SET_FILTERS,
+    congress,
+    chamber,
+    gender,
+    pageSize,
+    party,
+    usState,
+  };
+};
+
 export function setSearchResults({ searchResults, totalPages }) {
   return {
     type: ActionTypes.SET_SEARCH_RESULTS,
@@ -44,10 +56,23 @@ export function hideSuggestionBox() {
   };
 };
 
-export function fixResultsList({ members, pageSize, searchText }) {
+export function fixResultsList({
+  gender,
+  members,
+  pageSize,
+  party,
+  searchText,
+  state,
+}) {
   return (dispatch) => {
     const filteredResults = members
-      .filter((member) => doesMemberInformationMatchSearchText({ searchText, member }))
+      .filter((member) => doesMemberInformationMatchSearchText({
+        gender,
+        member,
+        party,
+        searchText,
+        state,
+      }))
       .sort((a, b) => sortMembers({ a, b }));
 
     let totalPages = Math.trunc(filteredResults.length / pageSize);

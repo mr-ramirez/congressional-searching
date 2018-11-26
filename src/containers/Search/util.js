@@ -1,16 +1,31 @@
 import Parties from '../../data/static/parties';
 import States from '../../data/static/states';
 
-export function doesMemberInformationMatchSearchText({ searchText, member }) {
+export function doesMemberInformationMatchSearchText({
+  gender,
+  member,
+  party,
+  searchText,
+  state,
+}) {
   const {
     firstName,
     lastName,
     middleName,
   } = member;
 
-  return firstName.toLowerCase().includes(searchText)
-    || lastName.toLowerCase().includes(searchText)
-    || middleName.toLowerCase().includes(searchText);
+  const name = `${firstName} ${middleName} ${lastName}`;
+
+  const nameConfition = name.trim().toLowerCase()
+    .includes(searchText.trim().toLowerCase());
+  
+  const genderCondition = (gender === member.gender || gender === 'DEFAULT');
+  
+  const partyCondition = (party === member.party || party === 'DEFAULT');
+  
+  const stateCondition = (state === member.state || state === 'DEFAULT');
+
+  return nameConfition && partyCondition && genderCondition && stateCondition;
 }
 
 export function sortMembers({ a, b }) {

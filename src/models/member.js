@@ -7,6 +7,7 @@ export default class Member {
   id = '';
   lastName = '';
   middleName = '';
+  nextElection = '';
   officeAddress = '';
   party = '';
   phoneNumber = '';
@@ -25,6 +26,7 @@ export default class Member {
     id,
     last_name,
     middle_name,
+    next_election,
     office,
     party,
     phone,
@@ -42,6 +44,7 @@ export default class Member {
     this.id = !id ? '' : id;
     this.lastName = !last_name ? '' : last_name;
     this.middleName = !middle_name ? '' : middle_name;
+    this.nextElection = !next_election ? '' : next_election;
     this.officeAddress = !office ? '' : office;
     this.party = !party ? '' : party;
     this.phoneNumber = !phone ? '' : phone;

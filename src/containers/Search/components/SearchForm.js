@@ -6,6 +6,7 @@ import {
   goToNextPage,
   goToPreviousPage,
   hideSuggestionBox,
+  setFilters,
   setSearchResults,
   setSuggestions,
   showSuggestionBox,
@@ -16,6 +17,9 @@ import {
   sortMembers,
 } from '../util';
 
+import { loadAllMembers } from '../../App/actions';
+
+import SearchFilters from './SearchFilters';
 import SearchResults from './SearchResults';
 import SuggestionBox from './SuggestionBox';
 import SearchInput from '../../../components/SearchInput';
@@ -29,6 +33,28 @@ class SearchForm extends Component {
       shouldSuggestionBoxBeDisplayed: true,
     };
   }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    const {
+      chamber,
+      congress,
+      gender,
+      pageSize,
+      party,
+      searchResults,
+      usState,
+    } = this.props.search;
+    if (chamber !== nextProps.search.chamber
+      || congress !== nextProps.search.congress) {
+      this.restart({ nextProps });
+    } else if ((gender !== nextProps.search.gender
+      || party !== nextProps.search.party
+      || usState !== nextProps.search.usState
+      || pageSize !== nextProps.search.pageSize)
+      && searchResults.length > 0) {
+      this.processFixing({ props: nextProps });
+    }
+  }
   
   makeSuggestionBoxInvisible = () => {
     setTimeout(() => {
@@ -36,15 +62,65 @@ class SearchForm extends Component {
     }, 200);
   }
 
+  restart = ({ nextProps }) => {
+    this.props.loadAllMembers({
+      chamber: nextProps.search.chamber,
+      congress: nextProps.search.congress,
+    });
+
+    this.props.setSearchResults({ searchResults: [], totalPages: 0 });
+
+    this.props.setSuggestions({ suggestions: [] });
+
+    this.setState({ searchText: '' });
+  }
+
   startFixingResultsList = () => {
     this.props.hideSuggestionBox();
 
-    this.props.fixResultsList({
-      members: this.props.app.members,
-      pageSize: this.props.search.pageSize,
-      searchText: this.state.searchText,
+    this.processFixing({
+      props: this.props,
     });
   }
+
+  suggestionClicked = ({ suggestion }) => {
+    const {
+      firstName,
+      lastName,
+      middleName,
+    } = suggestion;
+
+    this.setState({ searchText: `${firstName} ${middleName} ${lastName}` });
+
+    this.props.setSearchResults({
+      searchResults: [[suggestion]],
+      totalPages: 1,
+    });
+  }
+
+  processFixing = ({ props }) => {
+    const {
+      app: {
+        members,
+      },
+      search: {
+        gender,
+        pageSize,
+        party,
+        usState,
+      },
+    } = props;
+
+    this.props.fixResultsList({
+      gender,
+      members,
+      pageSize,
+      party,
+      searchText: this.state.searchText,
+      state: usState,
+    });
+  }
+  
 
   textChanged = ({ value }) => {
     const searchText = value.trim() === '' ? null : value.toLowerCase();
@@ -53,11 +129,22 @@ class SearchForm extends Component {
       app: {
         members,
       },
+      search: {
+        gender,
+        party,
+        usState,
+      },
       setSuggestions,
     } = this.props;
 
     const newSuggestions = members
-      .filter((member) => doesMemberInformationMatchSearchText({ searchText, member }))
+      .filter((member) => doesMemberInformationMatchSearchText({
+        gender,
+        member,
+        party,
+        searchText,
+        state: usState,
+      }))
       .sort((a, b) => sortMembers({ a, b }))
       .slice(0, 7);
 
@@ -85,8 +172,24 @@ class SearchForm extends Component {
           <div className="col-lg-12">
             {
               !this.state.searchText || !this.props.search.shouldSuggestionBoxBeDisplayed ?
-                null : (<SuggestionBox suggestions={this.props.search.suggestions} />)
+                null
+                :
+                (<SuggestionBox
+                  suggestions={this.props.search.suggestions}
+                  suggestionClicked={this.suggestionClicked} />)
             }
+          </div>
+        </div>
+
+        <div className="row mt-1">
+          <div className="col-lg-12">
+            <SearchFilters
+              congress={this.props.search.congress}
+              chamber={this.props.search.chamber}
+              gender={this.props.search.gender}
+              party={this.props.search.party}
+              usState={this.props.search.usState}
+              setFilters={this.props.setFilters} />
           </div>
         </div>
 
@@ -113,8 +216,22 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fixResultsList: ({ members, pageSize, searchText }) =>
-      dispatch(fixResultsList({ members, pageSize, searchText })),
+    fixResultsList: ({
+      gender,
+      members,
+      pageSize,
+      party,
+      searchText,
+      state,
+    }) =>
+      dispatch(fixResultsList({
+        gender,
+        members,
+        pageSize,
+        party,
+        searchText,
+        state,
+      })),
 
     goToNextPage: () =>
       dispatch(goToNextPage()),
@@ -124,6 +241,12 @@ function mapDispatchToProps(dispatch) {
 
     hideSuggestionBox: () =>
       dispatch(hideSuggestionBox()),
+
+    loadAllMembers: ({ chamber, congress }) =>
+      dispatch(loadAllMembers({ chamber, congress })),
+    
+    setFilters: ({ chamber, congress, gender, pageSize, party, usState }) =>
+      dispatch(setFilters({ chamber, congress, gender, pageSize, party, usState })),
 
     setSearchResults: ({ searchResults, totalPages }) =>
       dispatch(setSearchResults({ searchResults, totalPages })),

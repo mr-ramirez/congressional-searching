@@ -83,11 +83,11 @@ class SearchResultsItem extends Component {
             <div className="col-md-6">
               <div className="row">
                 <div className="col-lg-4">
-                  <p className="subtitle">Title:</p>
+                  <p className="subtitle m-0">Title:</p>
                 </div>
 
                 <div className="col-lg-8">
-                  <p>{title}</p>
+                  <p className="m-0">{title}</p>
                 </div>
               </div>
             </div>
@@ -95,11 +95,11 @@ class SearchResultsItem extends Component {
             <div className="col-md-6">
               <div className="row">
                   <div className="col-lg-4">
-                    <p className="subtitle">Party:</p>
+                    <p className="subtitle m-0">Party:</p>
                   </div>
 
                   <div className="col-lg-8">
-                    <p>{ this.getPartyName({ abbreviation: party }) }</p>
+                    <p className="m-0">{ this.getPartyName({ abbreviation: party }) }</p>
                   </div>
                 </div>
               </div>
@@ -109,11 +109,11 @@ class SearchResultsItem extends Component {
             <div className="col-md-6">
               <div className="row">
                 <div className="col-lg-4">
-                  <p className="subtitle">Office address:</p>
+                  <p className="subtitle m-0">Office address:</p>
                 </div>
 
                 <div className="col-lg-8">
-                  <p>{officeAddress}</p>
+                  <p className="m-0">{officeAddress}</p>
                 </div>
               </div>
             </div>
@@ -121,37 +121,11 @@ class SearchResultsItem extends Component {
             <div className="col-md-6">
               <div className="row">
                   <div className="col-lg-4">
-                    <p className="subtitle">State:</p>
+                    <p className="subtitle m-0">State:</p>
                   </div>
 
                   <div className="col-lg-8">
-                    <p>{ this.getStateName({ abbreviation: state }) }</p>
-                  </div>
-                </div>
-              </div>
-          </div>
-          
-          <div className="row">
-            <div className="col-md-6">
-              <div className="row">
-                <div className="col-lg-4">
-                  <p className="subtitle">Phone number:</p>
-                </div>
-
-                <div className="col-lg-8">
-                  <p>{ phoneNumber }</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-md-6">
-              <div className="row">
-                  <div className="col-lg-4">
-                    <p className="subtitle">Fax number:</p>
-                  </div>
-
-                  <div className="col-lg-8">
-                    <p>{ faxNumber }</p>
+                    <p className="m-0">{ this.getStateName({ abbreviation: state }) }</p>
                   </div>
                 </div>
               </div>
@@ -161,11 +135,11 @@ class SearchResultsItem extends Component {
             <div className="col-md-6">
               <div className="row">
                 <div className="col-lg-4">
-                  <p className="subtitle">Gender:</p>
+                  <p className="subtitle m-0">Phone number:</p>
                 </div>
 
                 <div className="col-lg-8">
-                  <p>{ this.getGenderName({ abbreviation: gender }) }</p>
+                  <p className="m-0">{ phoneNumber }</p>
                 </div>
               </div>
             </div>
@@ -173,11 +147,37 @@ class SearchResultsItem extends Component {
             <div className="col-md-6">
               <div className="row">
                   <div className="col-lg-4">
-                    <p className="subtitle">Date of Birth:</p>
+                    <p className="subtitle m-0">Fax number:</p>
                   </div>
 
                   <div className="col-lg-8">
-                    <p>{ dateOfBirth }</p>
+                    <p className="m-0">{ faxNumber }</p>
+                  </div>
+                </div>
+              </div>
+          </div>
+          
+          <div className="row">
+            <div className="col-md-6">
+              <div className="row">
+                <div className="col-lg-4">
+                  <p className="subtitle m-0">Gender:</p>
+                </div>
+
+                <div className="col-lg-8">
+                  <p className="m-0">{ this.getGenderName({ abbreviation: gender }) }</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-md-6">
+              <div className="row">
+                  <div className="col-lg-4">
+                    <p className="subtitle m-0">Date of Birth:</p>
+                  </div>
+
+                  <div className="col-lg-8">
+                    <p className="m-0">{ dateOfBirth }</p>
                   </div>
                 </div>
               </div>
@@ -198,7 +198,7 @@ class SearchResultsItem extends Component {
 
               {
                 facebook !== '' ?
-                  <a href={facebook}>
+                  <a href={`https://wwww.facebook.com/${facebook}`} target="blank">
                     <img src={facebookIcon}
                       className="linkIcon mx-2"
                       alt="Facebook" />
@@ -209,7 +209,7 @@ class SearchResultsItem extends Component {
 
               {
                 youtube !== '' ?
-                  <a href={youtube}>
+                  <a href={`https://wwww.youtube.com/${youtube}`} target="blank">
                     <img src={youtubeIcon}
                       className="linkIcon mx-2"
                       alt="YouTube" />
@@ -220,7 +220,7 @@ class SearchResultsItem extends Component {
 
               {
                 twitter !== '' ?
-                  <a href={twitter}>
+                  <a href={`https://wwww.twitter.com/${twitter}`} target="blank">
                     <img src={twitterIcon}
                       className="linkIcon mx-2"
                       alt="Twitter" />
